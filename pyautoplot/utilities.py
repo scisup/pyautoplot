@@ -1,6 +1,6 @@
 import os,sys
 from numpy import isnan, concatenate, arange
-import ma
+import numpy.ma as ma
 import logging
 
 def is_list(obj):
@@ -25,7 +25,7 @@ def set_nan_zero(data_array):
 
 
 def printnow (s):
-    print s
+    print(s)
     sys.stdout.flush()
     pass
 
@@ -41,7 +41,7 @@ def map_casa_table(function, casa_table, column_name='DATA', flag_name='FLAG', c
     selection = selection.selectrows(arange(0, nrows, rowincr))
     nrows = selection.nrows()
     lastset = nrows % chunksize
-    complete_chunks = nrows / chunksize
+    complete_chunks = nrows // chunksize
     results = []
     for chunk in range(complete_chunks):
         if max_chunks:
