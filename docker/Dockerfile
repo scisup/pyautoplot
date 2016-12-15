@@ -182,7 +182,7 @@ RUN apt-get update -y && \
                           wget git  python3-nose python3-coverage \
                           python3-astropy
 
-RUN A=$CK; git clone https://github.com/SterVeen/pyautoplot.git ${INSTALLDIR}/pyautoplot && \
+RUN A=$CL; git clone https://github.com/SterVeen/pyautoplot.git ${INSTALLDIR}/pyautoplot && \
     cd ${INSTALLDIR}/pyautoplot && \
     python3 setup.py install
 
