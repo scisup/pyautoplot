@@ -16,8 +16,8 @@ TESTLINE="-test"
 #TESTLINE=""
 
 # Normally, one would want to use pyautoplot:latest (PYAUTOPLOT_TAG=latest). This can be overriden however
-#PYAUTOPLOT_TAG=completeness
-PYAUTOPLOT_TAG=latest
+PYAUTOPLOT_TAG=lcuhead
+#PYAUTOPLOT_TAG=latest
 
 HOSTNAME=`hostname`
 PATH="$PATH:/opt/cep/pyautoplot/bin"
@@ -135,7 +135,7 @@ function exit_timeout() {
         report_global_status ${sas_id}
         done
     for sas_id in $GLOBAL_ARGS; do
-        ssh -n -x lofarsys@kis001 "/home/fallows/inspect_bsts_msplots.bash $sas_id"
+        ssh -n -x lofarsys@lcuhead "/home/fallows/inspect_bsts_msplots.bash $sas_id"
     done
     create_html_fn
     DATE_DONE=`date`
@@ -149,7 +149,7 @@ function sigterm_handler() {
         ssh -n -tt -x lofarsys@head01.cep4.control.lofar "bash -ilc \"use Lofar; use Pyautoplot; report_global_status ${sas_id}\""
         done
     for sas_id in $GLOBAL_ARGS; do
-        ssh -n -x lofarsys@kis001 "/home/fallows/inspect_bsts_msplots.bash $sas_id"
+        ssh -n -x lofarsys@lcuhead "/home/fallows/inspect_bsts_msplots.bash $sas_id"
     done
     create_html_remotely_fn lofarsys@head01.cep4.control.lofar
     DATE_DONE=`date`
@@ -194,7 +194,7 @@ case `hostname_fqdn` in
         done
 
         for sas_id in $@; do
-            ssh -n -x lofarsys@kis001 "/home/fallows/inspect_bsts_msplots.bash $sas_id"
+            ssh -n -x lofarsys@lcuhead "/home/fallows/inspect_bsts_msplots.bash $sas_id"
         done
     
         create_html_fn
@@ -258,7 +258,7 @@ case `hostname_fqdn` in
         done        
 
         for sas_id in $@; do
-            ssh -n -x lofarsys@kis001 "/home/fallows/inspect_bsts_msplots.bash $sas_id"
+            ssh -n -x lofarsys@lcuhead "/home/fallows/inspect_bsts_msplots.bash $sas_id"
         done
     
         create_html_remotely_fn lofarsys@head01.cep4.control.lofar
