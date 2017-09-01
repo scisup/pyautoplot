@@ -1352,7 +1352,7 @@ def main_index_html(plot_root, html_root):
         <h1>LOFAR inspection plots</h1>
         <p><i>Last modified: %s UTC</i>&nbsp;&nbsp;<a href="%s">Full list</a>&nbsp;&nbsp;<a href="%s">Ascii table</a></p>
         <table>
-        <tr><th>SAS ID</th> <th>Campaign</th> <th>Target</th> <th>DynSpec</th> <th title="Percentage of odd sized data products\n\nWhere 'odd sized' is defined as:\nData products with less than %0.2f%% completeness">Compl</th> <th title="Average completeness percentage of odd sized (based on f0seqnr sizes) data products\n\nWhere 'odd sized' is defined as:\nData products with less than %0.2f%% completeness">Compl*</th> <th>AntennaSet</th> <th>Band</th> <th>Start</th> <th>End</th> <th>Clock</th> <th>Subb</th> <th>Parset</th></tr>
+        <tr><th>SAS ID</th> <th>Campaign</th> <th>Target</th> <th>DynSpec</th> <th title="Percentage of good sized data products\n\nWhere 'good sized' is defined as:\nData products with more than %0.2f%% completeness.\n Datasize is determined as size of non-zero blocks.\n Completeness is compared to maximum file size.\nSAPs with a different number of subbands will therefore lead to lower reported completeness">Compl</th> <th title="Average completeness percentage of good sized (based on f0seqnr sizes) data products\n\nWhere 'good sized' is defined as:\nData products with more than %0.2f%% completeness">Compl*</th> <th>AntennaSet</th> <th>Band</th> <th>Start</th> <th>End</th> <th>Clock</th> <th>Subb</th> <th>Parset</th></tr>
         %s
         </table>
     </body>
