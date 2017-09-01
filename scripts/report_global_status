@@ -77,7 +77,7 @@ case `hostname_fqdn` in
         sleep 2
         if [[ ! -e  ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.losserrors ]] ; then
             echo "  - determining warnings / errors"
-            ssh -A cbm001 "egrep 'ERR|WARN|FATAL|runObservation|xception|acktrace|\#(0|1|2|3|4|5|6|7|8|9) |Signalling|Alarm|SIG|feed-back|Result code' log/rtcp-${sas_id}.log"| grep -v Flagging | egrep "(to payload errors is|Total discarded packets|transposeInput ran at|Run-time budget exceeded|BeamFormer\] I lost 0|BeamFormer\] Did not send 0)" > $INSPECT_ROOT/${sas_id}/rtcp-${sas_id}.losserrors
+            ssh -A cbm001 "egrep 'ERR|WARN|FATAL|runObservation|xception|acktrace|\#(0|1|2|3|4|5|6|7|8|9) |Signalling|Alarm|SIG|feed-back|Result code' log/rtcp-${sas_id}.log"| grep -v Flagging | egrep "(to payload errors is|Total discarded packets|transposeInput ran at|Run-time budget exceeded|BeamFormer\] I lost |BeamFormer\] Did not send )" > $INSPECT_ROOT/${sas_id}/rtcp-${sas_id}.losserrors
         fi
         sleep 2
         # Try to obtain the parset named Lxxxxxx.parset first
