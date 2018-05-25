@@ -385,7 +385,7 @@ def subband_html(parset, sb_name, rel_plot_files):
         <p>
           <ul>
             <li><a href="../%(index_filename)s">Subbands</a> <a href="../../%(index_filename)s">Projects</a></li>
-            <li><a href="http://www.lofar.org/wiki/doku.php?id=operator:system_validation_observations#lofar_inspection_page">What do I see here?</a></li>
+            <li><a href="https://astron.nl/radio-observatory/observing-capabilities/depth-technical-information/data-quality-inspection/data-qu">What do I see here?</a></li>
           </ul>
         </p>
 
