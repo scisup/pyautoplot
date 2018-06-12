@@ -159,7 +159,7 @@ ENV LOFAR_BRANCH_URL=https://svn.astron.nl/LOFAR/trunk \
 
 # Install
 RUN apt-get update && apt-get install -y subversion cmake g++ libboost-dev && \
-    mkdir -p ${INSTALLDIR}/lofar/build/gnu_opt && \
+    mkdir -p ${INSTALLDIR}/lofar/build/gnucxx_11_opt && \
     cd ${INSTALLDIR}/lofar && \
     svn --non-interactive -q co -r ${LOFAR_REVISION} -N ${LOFAR_BRANCH_URL} src; \
     svn --non-interactive -q up src/CMake && \
