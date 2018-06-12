@@ -163,9 +163,9 @@ RUN apt-get update && apt-get install -y subversion cmake g++ libboost-dev && \
     cd ${INSTALLDIR}/lofar && \
     svn --non-interactive -q co -r ${LOFAR_REVISION} -N ${LOFAR_BRANCH_URL} src; \
     svn --non-interactive -q up src/CMake && \
-    cd ${INSTALLDIR}/lofar/build/gnu_opt && cmake -DBUILD_PACKAGES=LofarStMan -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/lofar/ -DCASACORE_ROOT_DIR=${INSTALLDIR}/casacore/ -DUSE_LOG4CPLUS=OFF -DUSE_OPENMP=True ${INSTALLDIR}/lofar/src/ && \
-    cd ${INSTALLDIR}/lofar/build/gnu_opt && make -j ${J} && \
-    cd ${INSTALLDIR}/lofar/build/gnu_opt && make install && \
+    cd ${INSTALLDIR}/lofar/build/gnucxx_11_opt && cmake -DBUILD_PACKAGES=LofarStMan -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/lofar/ -DCASACORE_ROOT_DIR=${INSTALLDIR}/casacore/ -DUSE_LOG4CPLUS=OFF -DUSE_OPENMP=True ${INSTALLDIR}/lofar/src/ && \
+    cd ${INSTALLDIR}/lofar/build/gnucxx_11_opt && make -j ${J} && \
+    cd ${INSTALLDIR}/lofar/build/gnucxx_11_opt && make install && \
     bash -c "strip ${INSTALLDIR}/lofar/{bin,sbin,lib64}/* || true" && \
     bash -c "rm -rf ${INSTALLDIR}/lofar/{build,src}" && \
     apt-get purge -y subversion cmake g++ libboost-dev && \
