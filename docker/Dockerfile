@@ -18,7 +18,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
 #
 # versions
 #
-ENV CASACORE_VERSION=2.1.0 \
+# 2.4.1 / 2.3.0 on CEP3
+
+ENV CASACORE_VERSION=2.3.0 \
     CASAREST_VERSION=1.4.1 \
     PYTHON_CASACORE_VERSION=2.1.2 \
     BOOST_VERSION=1.58
@@ -66,7 +68,7 @@ RUN apt-get update && apt-get install -y wget git cmake g++ gfortran flex bison 
     if [ "${CASACORE_VERSION}" != "latest" ]; then cd ${INSTALLDIR}/casacore/src && git checkout tags/v${CASACORE_VERSION}; fi && \
     cd ${INSTALLDIR}/casacore/data && wget --retry-connrefused ftp://ftp.astron.nl/outgoing/Measures/WSRT_Measures.ztar && \
     cd ${INSTALLDIR}/casacore/data && tar xf WSRT_Measures.ztar  && rm -f WSRT_Measures.ztar && \
-    cd ${INSTALLDIR}/casacore/build && cmake -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/casacore/ -DDATA_DIR=${INSTALLDIR}/casacore/data -DBUILD_PYTHON=False -DBUILD_PYTHON3=True -DPYTHON3_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython${PYTHON_VERSION}m.so -DPYTHON3_INCLUDE_DIR=/usr/include/python${PYTHON_VERSION}  -DUSE_OPENMP=True -DUSE_FFTW3=TRUE ../src/ && \
+    cd ${INSTALLDIR}/casacore/build && cmake -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/casacore/ -DDATA_DIR=${INSTALLDIR}/casacore/data -DBUILD_PYTHON=False -DBUILD_PYTHON3=True -DPYTHON3_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython${PYTHON_VERSION}m.so -DPYTHON3_INCLUDE_DIR=/usr/include/python${PYTHON_VERSION}  -DUSE_OPENMP=True -DUSE_FFTW3=TRUE ../src/ -DCXX11=YES && \
     cd ${INSTALLDIR}/casacore/build && make -j ${J} && \
     cd ${INSTALLDIR}/casacore/build && make install && \
     bash -c "strip ${INSTALLDIR}/casacore/{lib,bin}/* || true" && \
@@ -159,13 +161,13 @@ ENV LOFAR_BRANCH_URL=https://svn.astron.nl/LOFAR/trunk \
 
 # Install
 RUN apt-get update && apt-get install -y subversion cmake g++ libboost-dev && \
-    mkdir -p ${INSTALLDIR}/lofar/build/gnucxx_11_opt && \
+    mkdir -p ${INSTALLDIR}/lofar/build/gnucxx11_opt && \
     cd ${INSTALLDIR}/lofar && \
     svn --non-interactive -q co -r ${LOFAR_REVISION} -N ${LOFAR_BRANCH_URL} src; \
     svn --non-interactive -q up src/CMake && \
-    cd ${INSTALLDIR}/lofar/build/gnucxx_11_opt && cmake -DBUILD_PACKAGES=LofarStMan -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/lofar/ -DCASACORE_ROOT_DIR=${INSTALLDIR}/casacore/ -DUSE_LOG4CPLUS=OFF -DUSE_OPENMP=True ${INSTALLDIR}/lofar/src/ && \
-    cd ${INSTALLDIR}/lofar/build/gnucxx_11_opt && make -j ${J} && \
-    cd ${INSTALLDIR}/lofar/build/gnucxx_11_opt && make install && \
+    cd ${INSTALLDIR}/lofar/build/gnucxx11_opt && cmake -DBUILD_PACKAGES=LofarStMan -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/lofar/ -DCASACORE_ROOT_DIR=${INSTALLDIR}/casacore/ -DUSE_LOG4CPLUS=OFF -DUSE_OPENMP=True ${INSTALLDIR}/lofar/src/ && \
+    cd ${INSTALLDIR}/lofar/build/gnucxx11_opt && make -j ${J} && \
+    cd ${INSTALLDIR}/lofar/build/gnucxx11_opt && make install && \
     bash -c "strip ${INSTALLDIR}/lofar/{bin,sbin,lib64}/* || true" && \
     bash -c "rm -rf ${INSTALLDIR}/lofar/{build,src}" && \
     apt-get purge -y subversion cmake g++ libboost-dev && \
