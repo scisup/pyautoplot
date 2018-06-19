@@ -1104,41 +1104,271 @@ def observation_input_loss_html(input_loss_filename):
         if loss > 0.0])
     return '<table>\n' + table_rows + '\n</table>\n'
 
+def get_station_list():
+    station_dict = dict()
+    station_dict['core'] = [
+        'CS001',
+        'CS002',
+        'CS003',
+        'CS004',
+        'CS005',
+        'CS006',
+        'CS007',
+        'CS011',
+        'CS013',
+        'CS017',
+        'CS021',
+        'CS024',
+        'CS026',
+        'CS028',
+        'CS030',
+        'CS031',
+    ]
+
+    station_dict['remote'] = [
+        'RS205',
+        'RS208',
+        'RS210',
+        'RS305',
+    ]
+
+    station_dict['international'] = [
+        'DE602',
+        'DE603',
+        'DE604',
+        'DE605',
+        'DE609',
+        'FR606',
+    ]
+
+    station_dict['all'] = station_dict['core'] + station_dict['remote'] + station_dict['international']
+    return station_dict
+
+
+def create_plot_per_station(list_of_plots, station_name, image_width=800, image_height=600):
+    plots = list(filter(lambda filename: station_name in filename, list_of_plots))
+
+    html_template  = '''
+    <tr><td>%(station_name)s</td></tr>
+    <tr>
+        <td>%(station_bst_zero)s</td>
+        <td>%(station_bst_one)s</td>
+        <td>%(station_zero_norm)s</td>
+        <td>%(station_one_norm)s</td>
+    </tr>
+    '''
+    NODATA = '''<img width:%(image_width)dpx >NO DATA</div>''' % dict(image_height=image_height, image_width=image_width)
+    if plots:
+        station_bst_zero = plot_html(filter(lambda filename: '_00.png' in filename, plots)[0], image_width=image_width)
+        station_bst_one = plot_html(filter(lambda filename: '_01.png' in filename, plots)[0], image_width=image_width)
+        station_zero_norm = plot_html(filter(lambda filename: '_00_norm.png' in filename, plots)[0], image_width=image_width)
+        station_one_norm = plot_html(filter(lambda filename: '_01_norm.png' in filename, plots)[0], image_width=image_width)
+
+    else:
+        station_bst_zero = NODATA
+        station_bst_one = NODATA
+        station_zero_norm = NODATA
+        station_one_norm = NODATA
+
+    return html_template % dict(station_bst_one=station_bst_one,
+                                station_bst_zero=station_bst_zero,
+                                station_zero_norm=station_zero_norm,
+                                station_one_norm=station_one_norm,
+                                station_name=station_name)
+
 
 def station_beamlet_statistics_plots_html(parset, rel_plot_files):
-    bst_zero_html    = [plot_html(image)
+
+
+    bst_zero_html = [plot_html(image)
                           for image in rel_plot_files if "_00.png" in image]
-    bst_one_html    = [plot_html(image)
+    bst_one_html = [plot_html(image)
                           for image in rel_plot_files if "_01.png" in image]
-    bst_zero_norm_html    = [plot_html(image)
+    bst_zero_norm_html = [plot_html(image)
                           for image in rel_plot_files if "_00_norm.png" in image]
     bst_one_norm_html    = [plot_html(image)
                           for image in rel_plot_files if "_01_norm.png" in image]
-    overview_rows = ['<tr><td>'+station_bst_zero+'</td><td>'+station_bst_one+'</td><td>'+station_zero_norm+'</td><td>'+station_one_norm+'</td></tr>' for (station_bst_zero, station_bst_one, station_zero_norm, station_one_norm) in zip(bst_zero_html, bst_one_html, bst_zero_norm_html, bst_one_norm_html)]
+
+    overview_rows_all = [create_plot_per_station(rel_plot_files, station_name) for station_name in get_station_list()['all']]
+    overview_rows_core = [create_plot_per_station(rel_plot_files, station_name) for station_name in get_station_list()['core']]
+    overview_rows_remote = [create_plot_per_station(rel_plot_files, station_name) for station_name in get_station_list()['remote']]
+    overview_rows_international = [create_plot_per_station(rel_plot_files, station_name) for station_name in get_station_list()['international']]
+
+
+    overview_rows = ['<tr><td>'+station_bst_zero+
+                     '</td><td>'+station_bst_one+
+                     '</td><td>'+station_zero_norm+
+                     '</td><td>'+station_one_norm+
+                     '</td></tr>' for (station_bst_zero,
+                                       station_bst_one,
+                                       station_zero_norm,
+                                       station_one_norm) in zip(bst_zero_html,
+                                                                bst_one_html,
+                                                                bst_zero_norm_html,
+                                                                bst_one_norm_html)]
     html_template = '''
 <html>
-    <head> <title}%(title)s</title> </head>
+    <head>
+    <style type="text/css"> /* Style the tab */
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+        
+        /* Style the buttons that are used to open the tab content */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+        
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #ccc;
+        }
+        
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        } 
+        span {
+            display: inline-block;
+        }
+        img {
+            width: 400px;
+        }</style>
+    <title>%(title)s</title> </head>
     <body>
+    <div class="tab">
+        <button class="tablinks active" onclick="openCity(event, 'All')">All stations</button>
+        <button class="tablinks" onclick="openCity(event, 'Core')">Core</button>
+        <button class="tablinks" onclick="openCity(event, 'Remote')">Remote</button>
+        <button class="tablinks" onclick="openCity(event, 'International')">International</button>
+    </div>
     <center>
-        <h1>%(title)s</h1>        
-        <p>
-          <ul>
-            <li><a href="../%(index_filename)s">Observation</a> <a href="../../%(index_filename)s">Projects</a></li>
-            <li><a href="http://www.lofar.org/wiki/doku.php?id=operator:system_validation_observations#lofar_beamlet_statistics">What do I see here?</a></li>
-          </ul>
-        </p>
-
+    <div>
         <table>
-        %(overview_rows)s
-        </table>
+        <tr>
+        <td>
+        <img src="http://astron.nl/lofartools/img/LOFARlogo.png"></img>
+        <td>
+        <h1>BST plots for %(title)s</h1>
+        <>
+        <tr>
+    </div>         
     </center>
+    <div id="All" class="tabcontent" style="display: block;">
+        <center>
+            
+        <h2>All Stations</h2>
+            <p>
+              <ul>
+                <li><a href="../%(index_filename)s">Observation</a> <a href="../../%(index_filename)s">Projects</a></li>
+                <li><a href="https://www.astron.nl/radio-observatory/observing-capabilities/depth-technical-information/data-quality-inspection/data-qu">What do I see here?</a></li>
+              </ul>
+            </p>
+    
+            <table>
+            %(overview_rows_all)s
+            </table>
+        </center>
+    </div>
+    
+    <div id="Core" class="tabcontent" style="display: none;">
+        <center>
+        <h2>Core Stations</h2>
+            <p>
+              <ul>
+                <li><a href="../%(index_filename)s">Observation</a> <a href="../../%(index_filename)s">Projects</a></li>
+                <li><a href="https://www.astron.nl/radio-observatory/observing-capabilities/depth-technical-information/data-quality-inspection/data-qu">What do I see here?</a></li>
+              </ul>
+            </p>
+    
+            <table>
+            %(overview_rows_core)s
+            </table>
+        </center>
+    </div>
+    
+    <div id="Remote" class="tabcontent" style="display: none;">
+        <center>
+        <h2>Remote Stations</h2>
+            <p>
+              <ul>
+                <li><a href="../%(index_filename)s">Observation</a> <a href="../../%(index_filename)s">Projects</a></li>
+                <li><a href="https://www.astron.nl/radio-observatory/observing-capabilities/depth-technical-information/data-quality-inspection/data-qu">What do I see here?</a></li>
+              </ul>
+            </p>
+    
+            <table>
+            %(overview_rows_remote)s
+            </table>
+        </center>
+    </div>
+    
+    <div id="International" class="tabcontent" style="display: none;">
+        <center>
+        <h2>International Stations</h2>
+            <p>
+              <ul>
+                <li><a href="../%(index_filename)s">Observation</a> <a href="../../%(index_filename)s">Projects</a></li>
+                <li><a href="https://www.astron.nl/radio-observatory/observing-capabilities/depth-technical-information/data-quality-inspection/data-qu">What do I see here?</a></li>
+              </ul>
+            </p>
+    
+            <table>
+            %(overview_rows_international)s
+            </table>
+        </center>
+    </div>
+    
+    
+    <script>
+    function openCity(evt, cityName) {
+        // Declare all variables
+        var i, tabcontent, tablinks;
+    
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+    
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+    
+        // Show the current tab, and add an "active" class to the link that opened the tab
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+    </script>
     </body>
 </html>'''
 
     return html_template % {
         'index_filename'    : INDEX_HTML_FILENAME,
         'title'        : parset['sas_id'],
-        'overview_rows': '\n'.join(overview_rows)}
+        'overview_rows_all': '\n'.join(overview_rows_all),
+        'overview_rows_core' : '\n'.join(overview_rows_core),
+        'overview_rows_remote': '\n'.join(overview_rows_remote),
+        'overview_rows_international': '\n'.join(overview_rows_international),
+    }
         
         
 """
