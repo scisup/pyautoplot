@@ -1123,6 +1123,14 @@ def get_station_list():
         'CS028',
         'CS030',
         'CS031',
+        'CS032',
+        'CS101',
+        'CS103',
+        'CS201',
+        'CS301',
+        'CS302',
+        'CS401',
+        'CS501'
     ]
 
     station_dict['remote'] = [
@@ -1130,6 +1138,15 @@ def get_station_list():
         'RS208',
         'RS210',
         'RS305',
+        'RS306',
+        'RS307',
+        'RS310',
+        'RS406',
+        'RS407',
+        'RS409',
+        'RS503',
+        'RS508',
+        'RS509',
     ]
 
     station_dict['international'] = [
@@ -1139,6 +1156,10 @@ def get_station_list():
         'DE605',
         'DE609',
         'FR606',
+        'IE613',
+        'PL610',
+        'PL611',
+        'PL612',
     ]
 
     station_dict['all'] = station_dict['core'] + station_dict['remote'] + station_dict['international']
