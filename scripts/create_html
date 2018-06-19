@@ -1180,10 +1180,10 @@ def create_plot_per_station(list_of_plots, station_name, image_width=800, image_
     '''
     NODATA = '''<img width:%(image_width)dpx >NO DATA</div>''' % dict(image_height=image_height, image_width=image_width)
     if plots:
-        station_bst_zero = plot_html(filter(lambda filename: '_00.png' in filename, plots)[0], image_width=image_width)
-        station_bst_one = plot_html(filter(lambda filename: '_01.png' in filename, plots)[0], image_width=image_width)
-        station_zero_norm = plot_html(filter(lambda filename: '_00_norm.png' in filename, plots)[0], image_width=image_width)
-        station_one_norm = plot_html(filter(lambda filename: '_01_norm.png' in filename, plots)[0], image_width=image_width)
+        station_bst_zero = plot_html(list(filter(lambda filename: '_00.png' in filename, plots))[0], image_width=image_width)
+        station_bst_one = plot_html(list(filter(lambda filename: '_01.png' in filename, plots))[0], image_width=image_width)
+        station_zero_norm = plot_html(list(filter(lambda filename: '_00_norm.png' in filename, plots))[0], image_width=image_width)
+        station_one_norm = plot_html(list(filter(lambda filename: '_01_norm.png' in filename, plots))[0], image_width=image_width)
 
     else:
         station_bst_zero = NODATA
