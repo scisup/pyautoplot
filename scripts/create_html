@@ -1260,14 +1260,8 @@ def station_beamlet_statistics_plots_html(parset, rel_plot_files):
     </div>
     <center>
     <div>
-        <table>
-        <tr>
-        <td>
         <img src="http://astron.nl/lofartools/img/LOFARlogo.png"></img>
-        <td>
         <h1>BST plots for %(title)s</h1>
-        <>
-        <tr>
     </div>         
     </center>
     <div id="All" class="tabcontent" style="display: block;">
