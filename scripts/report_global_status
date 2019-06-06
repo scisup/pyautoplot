@@ -1,5 +1,6 @@
 #!/bin/bash
 sas_id=${1}
+COBALT_HEAD=cbm2head.control.lofar
 
 function remote_parset_lookup() {
     parset_host=$1
@@ -12,7 +13,7 @@ function remote_parset_lookup() {
 
 function sas_id_project() {
     sas_id=$1
-    remote_parset_lookup lofarsys@cbm001 $sas_id 'Observation.Campaign.name'|sed -e's/=/ /g' -e 's/"/ /g'|awk '{ print $2 }';
+    remote_parset_lookup lofarsys@${COBALT_HEAD} $sas_id 'Observation.Campaign.name'|sed -e's/=/ /g' -e 's/"/ /g'|awk '{ print $2 }';
 }
 
 
@@ -63,32 +64,32 @@ case `hostname_fqdn` in
         sleep 2
         if [[ ! -e  ${INSPECT_ROOT}/${sas_id}/bfloss-${sas_id}.loss ]] ; then
             echo "  - determining cobalt output losses"
-            ssh -A cbm001 "bfloss ${sas_id}" > ${INSPECT_ROOT}/${sas_id}/bfloss-${sas_id}.loss
+            ssh -A ${COBALT_HEAD} "bfloss ${sas_id}" > ${INSPECT_ROOT}/${sas_id}/bfloss-${sas_id}.loss
         fi
         if [[ ! -e  ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.loss ]] ; then
             echo "  - determining input losses"
-            ssh -A cbm001 "tail -100000 log/rtcp-${sas_id}.log|grep loss|sort -k 8"|grep GPUProc > ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.loss
+            ssh -A ${COBALT_HEAD} "tail -100000 log/rtcp-${sas_id}.log|grep loss|sort -k 8"|grep GPUProc > ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.loss
         fi
         sleep 2
         if [[ ! -e  ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.errors ]] ; then
             echo "  - determining warnings / errors"
-            ssh -A cbm001 "egrep 'ERR|WARN|FATAL|runObservation|xception|acktrace|\#(0|1|2|3|4|5|6|7|8|9) |Signalling|Alarm|SIG|feed-back|Result code' log/rtcp-${sas_id}.log"|grep -v Flagging | egrep -v "(to payload errors is|Total discarded packets|transposeInput ran at|Run-time budget exceeded|BeamFormer\] I lost 0|BeamFormer\] Did not send 0)" > $INSPECT_ROOT/${sas_id}/rtcp-${sas_id}.errors
+            ssh -A ${COBALT_HEAD} "egrep 'ERR|WARN|FATAL|runObservation|xception|acktrace|\#(0|1|2|3|4|5|6|7|8|9) |Signalling|Alarm|SIG|feed-back|Result code' log/rtcp-${sas_id}.log"|grep -v Flagging | egrep -v "(to payload errors is|Total discarded packets|transposeInput ran at|Run-time budget exceeded|BeamFormer\] I lost 0|BeamFormer\] Did not send 0)" > $INSPECT_ROOT/${sas_id}/rtcp-${sas_id}.errors
         fi
         sleep 2
         if [[ ! -e  ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.losserrors ]] ; then
             echo "  - determining warnings / errors"
-            ssh -A cbm001 "egrep 'ERR|WARN|FATAL|runObservation|xception|acktrace|\#(0|1|2|3|4|5|6|7|8|9) |Signalling|Alarm|SIG|feed-back|Result code' log/rtcp-${sas_id}.log"| grep -v Flagging | egrep "(to payload errors is|Total discarded packets|transposeInput ran at|Run-time budget exceeded|BeamFormer\] I lost |BeamFormer\] Did not send )" > $INSPECT_ROOT/${sas_id}/rtcp-${sas_id}.losserrors
+            ssh -A ${COBALT_HEAD} "egrep 'ERR|WARN|FATAL|runObservation|xception|acktrace|\#(0|1|2|3|4|5|6|7|8|9) |Signalling|Alarm|SIG|feed-back|Result code' log/rtcp-${sas_id}.log"| grep -v Flagging | egrep "(to payload errors is|Total discarded packets|transposeInput ran at|Run-time budget exceeded|BeamFormer\] I lost |BeamFormer\] Did not send )" > $INSPECT_ROOT/${sas_id}/rtcp-${sas_id}.losserrors
         fi
         sleep 2
         # Try to obtain the parset named Lxxxxxx.parset first
         if [[ ! -e  ${INSPECT_ROOT}/${sas_id}/L${sas_id}.parset ]] ; then
             echo "   - checking for L${sas_id}.parset in /localhome/lofarsystem/log"
-            scp cbm001:/localhome/lofarsystem/log/L${sas_id}.parset ${INSPECT_ROOT}/${sas_id}/L${sas_id}.parset
+            scp ${COBALT_HEAD}:/localhome/lofarsystem/log/L${sas_id}.parset ${INSPECT_ROOT}/${sas_id}/L${sas_id}.parset
 
             # If the Lxxxxxx parset has not been copied, try to obtain the parset named rtcp-xxxxxx.parset
             if [[ ! -e  ${INSPECT_ROOT}/${sas_id}/L${sas_id}.parset ]] ; then
                 echo "   - checking for rtcp-${sas_id}.parset in /localhome/lofarsystem/parsets/"
-                scp cbm001:/localhome/lofarsystem/parsets/rtcp-${sas_id}.parset ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.parset
+                scp ${COBALT_HEAD}:/localhome/lofarsystem/parsets/rtcp-${sas_id}.parset ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.parset
             else
                 echo "   - existing parset found: ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.parset"
             fi
