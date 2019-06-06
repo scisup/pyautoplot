@@ -12,12 +12,12 @@
 # insert TESTLINE in the relevant filenames, e.g. index[TESTLINE].html. Ultimately, TESTLINE could be auto-filled 
 # depending on the TAG environment variable (if it exists and doesn't say 'latest'). For normal use, leave TESTLINE an
 # empty string (""). Note that TESTLINE doesn't necessarily propagate to programs/scripts called from within this one.
-#TESTLINE="-test"
-TESTLINE=""
+TESTLINE="-test"
+#TESTLINE=""
 
 # Normally, one would want to use pyautoplot:latest (PYAUTOPLOT_TAG=latest). This can be overriden however
-#PYAUTOPLOT_TAG=losslog
-PYAUTOPLOT_TAG=latest
+PYAUTOPLOT_TAG=cobalt2
+#PYAUTOPLOT_TAG=latest
 
 HOSTNAME=`hostname`
 PATH="$PATH:/opt/cep/pyautoplot/bin"
@@ -31,7 +31,7 @@ export ALARMTIME=20m
 PARENTPID=$$
 GLOBAL_ARGS=$@
 COMMAND_NAME="msplots $@"
-
+COBALT_HEAD=cbm2head.control.lofar
 
 function remote_parset_lookup() {
     parset_host=$1
@@ -44,7 +44,7 @@ function remote_parset_lookup() {
 
 function sas_id_project() {
     sas_id=$1
-    remote_parset_lookup lofarsys@cbm001 $sas_id 'Observation.Campaign.name'|sed -e's/=/ /g' -e 's/"/ /g'|awk '{ print $2 }';
+    remote_parset_lookup lofarsys@$COBALT_HEAD $sas_id 'Observation.Campaign.name'|sed -e's/=/ /g' -e 's/"/ /g'|awk '{ print $2 }';
 }
 
 
