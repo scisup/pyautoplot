@@ -27,7 +27,9 @@ INDEX_HTML_FILENAME = "index"+TESTLINE+".html"
 FULLINDEX_HTML_FILENAME = "fullindex"+TESTLINE+".html"
 INDEX_TXT_FILENAME = "index"+TESTLINE+".txt"
 CREATE_HTML_LOG_FILENAME = "create_html"+TESTLINE+".log"
-COBALT_HEAD = 'cbm2head.control.lofar'
+COBALT_HEAD = 'cbm2head.control.lofar' # COBALT2
+PARSET_PATH = '/opt/lofar/var/run/' # COBALT2
+#PARSET_PATH = ''/localhome/lofarsystem/parsets/' # COBALT
 
 def initialize_logging(log_level, log_dir = '/globaldata/inspect/'):
     r'''
@@ -711,7 +713,7 @@ def find_parset(in_sas_id):
             
     # Nothing found yet, check if on Cobalt
     try:
-        expected_fname = os.path.join('/localhome/lofarsystem/parsets/',
+        expected_fname = os.path.join(PARSET_PATH,
                                       'rtcp-%d.parset' % in_sas_id)
         fname = subprocess.check_output(['ssh', COBALT_HEAD, 'ls',
                                          '%s' % expected_fname])
