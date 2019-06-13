@@ -23,7 +23,8 @@ HOSTNAME=`hostname`
 PATH="$PATH:/opt/cep/pyautoplot/bin"
 INSPECT_ROOT=/globaldata/inspect
 LOG=$INSPECT_ROOT/launch-msplots$TESTLINE.log
-
+PARSET_PATH='/opt/lofar/var/run' # cobalt2
+#PARSET_PATH='/localhome/lofarsystem/parsets/' # cobalt
 
 #Time to wait for stuck processes before killing them
 export ALARMTIME=20m
@@ -38,7 +39,7 @@ function remote_parset_lookup() {
     sas_id=$2
     parset_key=$3
 
-    ssh $parset_host "grep $parset_key /localhome/lofarsystem/parsets/rtcp-$sas_id.parset" 2>/dev/null;
+    ssh $parset_host "grep $parset_key ${PARSET_PATH}/rtcp-$sas_id.parset" 2>/dev/null;
 }
 
 
