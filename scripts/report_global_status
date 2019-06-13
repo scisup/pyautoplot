@@ -88,13 +88,13 @@ case `hostname_fqdn` in
         sleep 2
         # Try to obtain the parset named Lxxxxxx.parset first
         if [[ ! -e  ${INSPECT_ROOT}/${sas_id}/L${sas_id}.parset ]] ; then
-            echo "   - checking for L${sas_id}.parset in "${COBALT_LOG_DIR}
-            scp ${COBALT_HEAD}:/${COBALT_LOG_DIR}/L${sas_id}.parset ${INSPECT_ROOT}/${sas_id}/L${sas_id}.parset
+            echo "   - checking for L${sas_id}.parset in "${PARSET_PATH}
+            scp ${COBALT_HEAD}:/${PARSET_PATH}/L${sas_id}.parset ${INSPECT_ROOT}/${sas_id}/L${sas_id}.parset
 
             # If the Lxxxxxx parset has not been copied, try to obtain the parset named rtcp-xxxxxx.parset
             if [[ ! -e  ${INSPECT_ROOT}/${sas_id}/L${sas_id}.parset ]] ; then
-                echo "   - checking for rtcp-${sas_id}.parset in "${COBALT_LOG_DIR}
-                scp ${COBALT_HEAD}:${COBALT_LOG_DIR}/rtcp-${sas_id}.parset ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.parset
+                echo "   - checking for rtcp-${sas_id}.parset in "${PARSET_PATH}
+                scp ${COBALT_HEAD}:${PARSET_PATH}/rtcp-${sas_id}.parset ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.parset
             else
                 echo "   - existing parset found: ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.parset"
             fi
