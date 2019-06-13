@@ -1,13 +1,18 @@
 #!/bin/bash
 sas_id=${1}
 COBALT_HEAD=cbm2head.control.lofar
+PARSET_PATH=/opt/lofar/var/run
+COBALT_LOG_DIR=/opt/lofar/var/log
+#COBALT_LOG_DIR=/localhome/lofarsystem/log
+#PARSET_PATH=/localhome/lofarsystem/parsets/
+
 
 function remote_parset_lookup() {
     parset_host=$1
     sas_id=$2
     parset_key=$3
 
-    ssh $parset_host "grep $parset_key /localhome/lofarsystem/parsets/rtcp-$sas_id.parset" 2>/dev/null;
+    ssh $parset_host "grep $parset_key ${PARSET_PATH}/rtcp-$sas_id.parset" 2>/dev/null;
 }
 
 
@@ -83,13 +88,13 @@ case `hostname_fqdn` in
         sleep 2
         # Try to obtain the parset named Lxxxxxx.parset first
         if [[ ! -e  ${INSPECT_ROOT}/${sas_id}/L${sas_id}.parset ]] ; then
-            echo "   - checking for L${sas_id}.parset in /localhome/lofarsystem/log"
-            scp ${COBALT_HEAD}:/localhome/lofarsystem/log/L${sas_id}.parset ${INSPECT_ROOT}/${sas_id}/L${sas_id}.parset
+            echo "   - checking for L${sas_id}.parset in "${COBALT_LOG_DIR}
+            scp ${COBALT_HEAD}:/${COBALT_LOG_DIR}/L${sas_id}.parset ${INSPECT_ROOT}/${sas_id}/L${sas_id}.parset
 
             # If the Lxxxxxx parset has not been copied, try to obtain the parset named rtcp-xxxxxx.parset
             if [[ ! -e  ${INSPECT_ROOT}/${sas_id}/L${sas_id}.parset ]] ; then
-                echo "   - checking for rtcp-${sas_id}.parset in /localhome/lofarsystem/parsets/"
-                scp ${COBALT_HEAD}:/localhome/lofarsystem/parsets/rtcp-${sas_id}.parset ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.parset
+                echo "   - checking for rtcp-${sas_id}.parset in "${COBALT_LOG_DIR}
+                scp ${COBALT_HEAD}:${COBALT_LOG_DIR}/rtcp-${sas_id}.parset ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.parset
             else
                 echo "   - existing parset found: ${INSPECT_ROOT}/${sas_id}/rtcp-${sas_id}.parset"
             fi
