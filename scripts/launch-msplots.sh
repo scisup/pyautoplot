@@ -23,8 +23,9 @@ HOSTNAME=`hostname`
 PATH="$PATH:/opt/cep/pyautoplot/bin"
 INSPECT_ROOT=/globaldata/inspect
 LOG=$INSPECT_ROOT/launch-msplots$TESTLINE.log
-PARSET_PATH='/opt/lofar/var/run' # cobalt2
-#PARSET_PATH='/localhome/lofarsystem/parsets/' # cobalt
+PARSET_PATH='/opt/lofar/nfs/parset/' # cobalt2
+#PARSET_PATH='/opt/lofar/var/run' # cobalt and cobalt2 first runs
+#PARSET_PATH='/localhome/lofarsystem/parsets/' # cobalt symlink
 
 #Time to wait for stuck processes before killing them
 export ALARMTIME=20m
