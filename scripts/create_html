@@ -28,8 +28,9 @@ FULLINDEX_HTML_FILENAME = "fullindex"+TESTLINE+".html"
 INDEX_TXT_FILENAME = "index"+TESTLINE+".txt"
 CREATE_HTML_LOG_FILENAME = "create_html"+TESTLINE+".log"
 COBALT_HEAD = 'cbm2head.control.lofar' # COBALT2
-PARSET_PATH = '/opt/lofar/var/run/' # COBALT2
-#PARSET_PATH = ''/localhome/lofarsystem/parsets/' # COBALT
+PARSET_PATH = '/opt/lofar/nfs/parset/' # COBALT2
+#PARSET_PATH = '/opt/lofar/var/run/' # COBALT1
+#PARSET_PATH = ''/localhome/lofarsystem/parsets/' # COBALT symlink
 
 def initialize_logging(log_level, log_dir = '/globaldata/inspect/'):
     r'''
