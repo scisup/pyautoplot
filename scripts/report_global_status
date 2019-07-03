@@ -1,7 +1,8 @@
 #!/bin/bash
 sas_id=${1}
 COBALT_HEAD=cbm2head.control.lofar
-PARSET_PATH=/opt/lofar/var/run
+PARSET_PATH=/opt/lofar/nfs/parset/ # cobalt 2
+#PARSET_PATH=/opt/lofar/var/run
 COBALT_LOG_DIR=/opt/lofar/var/log
 #COBALT_LOG_DIR=/localhome/lofarsystem/log
 #PARSET_PATH=/localhome/lofarsystem/parsets/
