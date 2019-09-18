@@ -1162,6 +1162,7 @@ def get_station_list():
         'DE609',
         'FR606',
         'IE613',
+        'LV614',
         'PL610',
         'PL611',
         'PL612',
