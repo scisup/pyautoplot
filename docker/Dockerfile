@@ -186,6 +186,7 @@ RUN apt-get update -y && \
 
 RUN A=$CW; git clone https://github.com/scisup/pyautoplot.git ${INSTALLDIR}/pyautoplot && \
     cd ${INSTALLDIR}/pyautoplot && \
+    git checkout python3 && \
     python3 setup.py install
 
 
