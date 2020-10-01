@@ -49,6 +49,11 @@ function sas_id_project() {
     remote_parset_lookup lofarsys@$COBALT_HEAD $sas_id 'Observation.Campaign.name'|sed -e's/=/ /g' -e 's/"/ /g'|awk '{ print $2 }';
 }
 
+function sas_id_path() {     
+    sas_id=$1;     
+    remote_parset_lookup lofarsys@$COBALT_HEAD $sas_id 'Observation.DataProducts.Output_Correlated.storageClusterPartition'|sed -e's/=/ /g' -e 's/"/ /g'|awk '{ print $2 }'; 
+}
+
 
 function hostname_fqdn() {
     # Return the fully qualified domain name of a LOFAR server
@@ -221,8 +226,9 @@ case `hostname_fqdn` in
         SSH_PIDS=""
         for sas_id in $@; do
             project=`sas_id_project $sas_id`
-            data_products_full_path=`find /data/projects/$project/L$sas_id/ -iname "*.MS"`
-
+            data_products_location=`sas_id_path $sas_id`
+            data_products_full_path=`find $data_products_location/$project/L$sas_id/ -iname "*.MS"`
+           
             for product in $data_products_full_path; do
                 # Submit slurm jobs that start docker containers at cpuxx nodes...
                 ssh -n -tt -x lofarsys@localhost \
