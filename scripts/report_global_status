@@ -22,6 +22,10 @@ function sas_id_project() {
     remote_parset_lookup lofarsys@${COBALT_HEAD} $sas_id 'Observation.Campaign.name'|sed -e's/=/ /g' -e 's/"/ /g'|awk '{ print $2 }';
 }
 
+function sas_id_path() {     
+    sas_id=$1;     
+    remote_parset_lookup lofarsys@$COBALT_HEAD $sas_id 'Observation.DataProducts.Output_Correlated.storageClusterPartition'|sed -e's/=/ /g' -e 's/"/ /g'|awk '{ print $2 }'; 
+}
 
 function hostname_fqdn() {
     # Return the fully qualified domain name of a LOFAR server
@@ -32,6 +36,7 @@ function hostname_fqdn() {
 
 
 project_id=`sas_id_project ${sas_id}`
+data_products_location=`sas_id_path $sas_id`
 
 case `hostname_fqdn` in
     lhn00*)
@@ -60,12 +65,12 @@ case `hostname_fqdn` in
         mkdir -p ${INSPECT_ROOT}/${sas_id}
         if [[ ! -e  ${INSPECT_ROOT}/${sas_id}/file-sizes.txt ]] ; then
             echo "  - determining file sizes"
-            du -B 1 -sm /data/projects/${project_id}/L${sas_id}/*/* > ${INSPECT_ROOT}/${sas_id}/file-sizes.txt
+            du -B 1 -sm $data_products_location/${project_id}/L${sas_id}/*/* > ${INSPECT_ROOT}/${sas_id}/file-sizes.txt
         fi
         sleep 2
         if [[ ! -e  ${INSPECT_ROOT}/${sas_id}/f0seqnr-sizes.txt ]] ; then
             echo "  - determining f0seqnr sizes"
-            du -b --apparent-size /data/projects/${project_id}/L${sas_id}/uv/*/table.f0seqnr > ${INSPECT_ROOT}/${sas_id}/f0seqnr-sizes.txt
+            du -b --apparent-size $data_products_location/${project_id}/L${sas_id}/uv/*/table.f0seqnr > ${INSPECT_ROOT}/${sas_id}/f0seqnr-sizes.txt
         fi
         sleep 2
         if [[ ! -e  ${INSPECT_ROOT}/${sas_id}/bfloss-${sas_id}.loss ]] ; then
